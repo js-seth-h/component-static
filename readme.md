@@ -1,186 +1,72 @@
-# grunt-service
+#component-static
 
-> start/stop/restart service( = background process), support kill by pidfile 
+> read all 'component.json' in subdir, merging 'static' property
+
+
 
 ## Purpose
 
-[grunt-shell][sh] and [grunt-shell-spawn][sp] has some obstacle in my experience. 
-I want to start/restart my server code for developemnt.
-But, these plugins remove readability of debug message, and can't kill process in window(my development environment)
+When I use [component][comp], I need a way to expose `resource` through HTTP. 
+Not by `build process`, purely http access to `static resources` like images, html, json, xml and so on. 
+
+I need a tookit, but I can't find. So I made.
+
+[comp]: https://github.com/component
+## How to use
+
+make custom propery `static` on `component.json`
 
 
-## Features
-
-* options pass to `childprocess.spawn`
-* so, this supports full option of `childprocess.spawn` include `stdio: ignore`, `stdio: inherit`, `stdio: ['ignore','pipe','pipe']` and `stdio: [0, 1,2 ]`  
-* kill process by `PID file`
-
-
+```json
+{
+  "name": "login",
  
-## Getting Started
+  "scripts": [
+    "*.coffee"
+  ],
+  "styles": [
+    "*.less"
+  ],
+  "templates": [
+    "*.html"
+  ],
 
-If you haven't used [grunt][] before, be sure to check out the [Getting Started][] guide, as it explains how to create a [gruntfile][Getting Started] as well as install and use grunt plugins. Once you're familiar with that process, install this plugin with this command:
+  "static": {
+    "/login": "./public"
+  }
+}
+```  
 
-```bash
-$ npm install --save-dev grunt-service
-```
+it means, url start with `/login` should map to `./public`.
 
-Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
+If location of `component.json` is 'client/login/component.json', `/login` should map to 'client/login/public'.
 
-```js
-grunt.loadNpmTasks('grunt-service');
-```
-
-*Tip: the [load-grunt-tasks](https://github.com/sindresorhus/load-grunt-tasks) module makes it easier to load multiple grunt tasks.*
-
-[grunt]: http://gruntjs.com
-[Getting Started]: https://github.com/gruntjs/grunt/wiki/Getting-started
+By this, In login component, access `static resource` by url like 'http://localhost/login/button.jpg'.
 
 
-## Examples
+## How to use
 
+[hand-static][hs] is support `url prefix mapping`. 
 
-### As a Developement Sever 
-> Support [debug][debug] module & PID File for restart
-[debug]: https://www.npmjs.org/package/debug
+[hs]: https://github.com/js-seth-h/hand-static 
+
+So, use like follows.
 
 ```coffee
-    
-trim = (str)->
-  str.replace /(^\s*)|(\s*$)/gm, ""
-fromLines = (patterns)->
-  return trim(patterns).split('\n').map (pattern)->
-    trim(pattern)
+    componentStatic = require 'component-static'
 
-watchDirIgnore = fromLines """ 
-.git
-.gitignore
-tmp
-test
-public
-node_modules 
-""" 
+    componentStatic (staticMapping)->
+      server = http.createServer ho.make [
+        #... something you need
+        statics staticMapping
+      ]
+# or With Connect
 
-clientMatch = fromLines """
-browser/*.coffee
-module/*/browser/*.coffee
-""" 
-
-serverMatch = fromLines """
-*.coffee
-!browser
-!**/browser/**
-!Gruntfile.coffee 
-"""
-
-
-  grunt.initConfig   
-    fastWatch:   
-      cwd:
-        dir : '.'
-        ignoreSubDir : watchDirIgnore 
-        trigger:
-          server:  
-            care : serverMatch
-            tasks: ["service:server:restart"]
-          client: 
-            care : clientMatch    
-            tasks: ["service:server:restart"]
-    service: 
-      server: 
-        shellCommand : 'set DEBUG=* && coffee app.coffee'
-        pidFile : (process.env.TMPDIR || process.env.TEMP) + '/app.pid'  
-        options :
-          stdio : 'inherit'
-
-  grunt.loadNpmTasks('grunt-spawn');
-  grunt.loadNpmTasks('grunt-fast-watch'); 
-  grunt.registerTask('default', ['service:server', 'fastWatch:cwd']);
-  
+      app = connect()
+      #... something you need
+      app.use statics staticMapping
+      
 ```
-
-Run server and show it [debug][debug]  log without changes( inclulde coloring).
-
-I make & use [grunt-fast-watch][grunt-fast-watch] instead `grunt-watch` several reason. see also [grunt-fast-watch][grunt-fast-watch].
-
-[grunt-fast-watch]:  https://www.npmjs.org/package/grunt-fast-watch
-
-
-### Create a folder named `test`.
-
-```js
-grunt.initConfig({
-	spawn: {
-		makeDir: {
-			shellCommand: 'mkdir test'
-      option: {
-        failOnError: false
-      }
-		}
-	}
-});
-```
-Making direcity.
-Evne if fail mkdir (because of already exists), No Error occured.
-
-     
-### Spwan direclty 
-
-```js
-grunt.initConfig({
-  testDir: 'test3',
-	spawn: {
-		direct: {
-      command: 'mkdir'
-      args: ['<%= testDir %>']
-		}
-	}
-});
-```
-
-
-#### Run command and display the output
-
-Output a directory listing in your Terminal.
-
-```js
-grunt.initConfig({
-	shell: {
-		dirListing: {
-			command: 'ls'
-		}
-	}
-});
-``` 
- 
-
-
-## options
-	
-options will pass to `childprocess.spawn` without changes
-
-so, please refer [Node.js API Document](http://www.nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options)
-
--  default value of `stdio` is 'pipe', it means grunt can read stdio.
-
-And some added option are as follows:
-
-
-### failOnError
- 
-Default: `false`
-Type: `Boolean`
-
-If false, exit code of command is ignored.
-if true, exit code 0 mean success( continue next task ) otherwise grunt show error and stop
-
-### async
-
-Default: `true`
-Type: `Boolean`
-
-If true, the next task is to continue after the end of the command.
-If false, the next task is to continue without blocking.
 
 
 ## License
@@ -208,6 +94,3 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
-[sh]: https://github.com/sindresorhus/grunt-shell 
-[sp]: https://github.com/cri5ti/grunt-shell-spawn
