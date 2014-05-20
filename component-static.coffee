@@ -1,9 +1,9 @@
 fs = require 'fs'
 glob = require 'glob'
 path = require 'path'
+debug = require('debug')('component-static')
 
 mergeJsons = (files, callback)->
-  return callback {} unless files
   result = {}
   # console.log files
   cnt = files.length
@@ -17,6 +17,7 @@ mergeJsons = (files, callback)->
             for own prefix, staticDir of json.static
               dir = path.dirname(file)
               result[prefix] = path.normalize path.join dir, staticDir  
+              debug 'prefix', prefix, ' path', result[prefix]
         catch 
       cnt--
       if cnt is 0
@@ -25,7 +26,10 @@ mergeJsons = (files, callback)->
 
 
 componentStatic = (callback)->
-  glob '**/component.json',(err, files)-> 
+  glob '**/component.json',(err, files)->  
+    return callback err if err
+    return callback {} if files.length is 0
+    debug 'files', files, err
     mergeJsons files, (staticMapping)->
       callback staticMapping
 

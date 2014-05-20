@@ -1,6 +1,6 @@
 {
   "name": "component-static",
-  "version": "0.0.7-fix-2",
+  "version": "0.0.8",
   "description": "",
   "main": "component-static.js",
   "scripts": {
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/js-seth-h/component-public",
   "dependencies": {
+    "debug": "^0.8.1",
     "glob": "^3.2.10"
   }
 }
