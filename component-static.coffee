@@ -1,31 +1,34 @@
-
+fs = require 'fs'
 glob = require 'glob'
 path = require 'path'
 
-mergeJsons = (files)->
+mergeJsons = (files, callback)->
   result = {}
   # console.log files
+  cnt = files.length
   for file in files
-    json = require './' + file
-    continue unless json.static 
-
-    # console.log json.static
-
-    for own prefix, staticDir of json.static
-      dir = path.dirname(file)
-
-      result[prefix] = path.normalize path.join dir, staticDir  
-  return result
+    # json = require './' + file
+    fs.readFile file, (err, data)->
+      unless err           
+        json = JSON.parse(data);
+        if json.static 
+          for own prefix, staticDir of json.static
+            dir = path.dirname(file)
+            result[prefix] = path.normalize path.join dir, staticDir  
+      cnt--
+      if cnt is 0
+        callback(result)
 
 
 
 componentStatic = (callback)->
   glob '**/component.json',(err, files)-> 
-    callback mergeJsons files
+    mergeJsons files, (staticMapping)->
+      callback staticMapping
 
-componentStatic.sync = ()->
-  files = glob.sync '**/component.json'
-  return mergeJsons files
+# componentStatic.sync = ()->
+#   files = glob.sync '**/component.json'
+#   return mergeJsons files
 
 
 module.exports = componentStatic

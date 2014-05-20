@@ -1,0 +1,17 @@
+{
+  "name": "login",
+ 
+  "scripts": [
+    "*.coffee"
+  ],
+  "styles": [
+    "*.less"
+  ],
+  "templates": [
+    "*.html"
+  ],
+
+  "static": {
+    "/S3": "./public"
+  }
+}

@@ -5,7 +5,8 @@
   "main": "component-static.js",
   "scripts": {
     "start": "coffee component-static.coffee",
-    "build": "coffee -c -b component-static.coffee"
+    "build": "coffee -c -b component-static.coffee",
+    "test": "coffee test.coffee"
   },
   "repository": {
     "type": "git",
