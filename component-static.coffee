@@ -3,6 +3,7 @@ glob = require 'glob'
 path = require 'path'
 
 mergeJsons = (files, callback)->
+  return callback {} unless files
   result = {}
   # console.log files
   cnt = files.length

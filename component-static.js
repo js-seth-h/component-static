@@ -10,6 +10,9 @@ path = require('path');
 
 mergeJsons = function(files, callback) {
   var cnt, file, result, _i, _len, _results;
+  if (!files) {
+    return callback({});
+  }
   result = {};
   cnt = files.length;
   _results = [];
