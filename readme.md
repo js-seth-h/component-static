@@ -55,7 +55,7 @@ So, use like follows.
 ```coffee
     componentStatic = require 'component-static'
 
-    componentStatic (staticMapping)->
+    componentStatic (err, staticMapping)->
       server = http.createServer ho.make [
         #... something you need
         statics staticMapping

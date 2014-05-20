@@ -28,22 +28,9 @@ mergeJsons = (files, callback)->
 componentStatic = (callback)->
   glob '**/component.json',(err, files)->  
     return callback err if err
-    return callback {} if files.length is 0
+    return callback null, {} if files.length is 0
     debug 'files', files, err
     mergeJsons files, (staticMapping)->
-      callback staticMapping
-
-# componentStatic.sync = ()->
-#   files = glob.sync '**/component.json'
-#   return mergeJsons files
-
+      callback null, staticMapping
 
 module.exports = componentStatic
-
-
-
-
-# console.log module.export.sync()
-# console.log '-----------------'
-
-# module.export (staticMapping)-> console.log staticMapping

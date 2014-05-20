@@ -51,11 +51,11 @@ componentStatic = function(callback) {
       return callback(err);
     }
     if (files.length === 0) {
-      return callback({});
+      return callback(null, {});
     }
     debug('files', files, err);
     return mergeJsons(files, function(staticMapping) {
-      return callback(staticMapping);
+      return callback(null, staticMapping);
     });
   });
 };
