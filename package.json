@@ -1,0 +1,27 @@
+{
+  "name": "component-static",
+  "version": "0.0.0",
+  "description": "",
+  "main": "component-static.js",
+  "scripts": {
+    "start": "coffee component-static.coffee"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/js-seth-h/component-public.git"
+  },
+  "keywords": [
+    "component",
+    "static",
+    "public"
+  ],
+  "author": "js.seth.h@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/js-seth-h/component-public/issues"
+  },
+  "homepage": "https://github.com/js-seth-h/component-public",
+  "dependencies": {
+    "glob": "^3.2.10"
+  }
+}
