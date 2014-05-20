@@ -69,6 +69,25 @@ So, use like follows.
 ```
 
 
+```coffee
+    # Sync version
+    componentStatic = require 'component-static'
+
+    staticMapping = componentStatic.sync()
+
+    server = http.createServer ho.make [
+      #... something you need
+      statics staticMapping
+    ]
+# or With Connect
+
+    app = connect()
+    #... something you need
+    app.use statics staticMapping
+    
+```
+
+
 ## License
 
 (The MIT License)

@@ -2,28 +2,38 @@
 glob = require 'glob'
 path = require 'path'
 
-module.export = (option, callback)->
-
-  unless callback
-    callback = option
-    option = {
-      root: '.'
-    }
-
+mergeJsons = (files)->
   result = {}
-  glob '**/component.json', {}, (err, files)->
-    # console.log files
-    for file in files
-      json = require './' + file
-      continue unless json.static 
+  # console.log files
+  for file in files
+    json = require './' + file
+    continue unless json.static 
 
-      # console.log json.static
+    # console.log json.static
 
-      for own prefix, staticDir of json.static
-        dir = path.dirname(file)
+    for own prefix, staticDir of json.static
+      dir = path.dirname(file)
 
-        result[prefix] = path.relative option.root, path.join dir, staticDir  
+      result[prefix] = path.normalize path.join dir, staticDir  
+  return result
 
-    callback(result)
+
+
+componentStatic = (callback)->
+  glob '**/component.json',(err, files)-> 
+    callback mergeJsons files
+
+componentStatic.sync = ()->
+  files = glob.sync '**/component.json'
+  return mergeJsons files
+
+
+module.export = componentStatic
+
+
+
+
+# console.log module.export.sync()
+# console.log '-----------------'
 
 # module.export (staticMapping)-> console.log staticMapping
