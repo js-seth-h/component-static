@@ -1,12 +1,13 @@
 {
   "name": "component-static",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "main": "component-static.js",
   "scripts": {
     "start": "coffee component-static.coffee",
     "build": "coffee -c -b component-static.coffee",
-    "test": "coffee test.coffee"
+    "test": "coffee test.coffee",
+    "prepublish": "npm run-script build"
   },
   "repository": {
     "type": "git",
