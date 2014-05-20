@@ -28,7 +28,7 @@ componentStatic.sync = ()->
   return mergeJsons files
 
 
-module.export = componentStatic
+module.exports = componentStatic
 
 
 
