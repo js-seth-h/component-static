@@ -9,19 +9,20 @@ mergeJsons = (files, callback)->
   cnt = files.length
   for file in files
     # json = require './' + file
-    fs.readFile file, (err, data)->
-      unless err
-        try
-          json = JSON.parse(data);
-          if json.static 
-            for own prefix, staticDir of json.static
-              dir = path.dirname(file)
-              result[prefix] = path.normalize path.join dir, staticDir  
-              debug 'prefix : path = ', prefix, ' :', result[prefix]
-        catch 
-      cnt--
-      if cnt is 0
-        callback(result)
+    do (file)->
+      fs.readFile file, (err, data)->
+        unless err
+          try
+            json = JSON.parse(data);
+            if json.static 
+              for own prefix, staticDir of json.static
+                dir = path.dirname(file)
+                result[prefix] = path.normalize path.join dir, staticDir  
+                debug 'prefix : path = ', prefix, ' :', result[prefix]
+          catch 
+        cnt--
+        if cnt is 0
+          callback(result)
 
 
 
