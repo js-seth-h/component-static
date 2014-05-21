@@ -29,7 +29,7 @@ mergeJsons = function(files, callback) {
               staticDir = _ref[prefix];
               dir = path.dirname(file);
               result[prefix] = path.normalize(path.join(dir, staticDir));
-              debug('prefix', prefix, ' path', result[prefix]);
+              debug('prefix : path = ', prefix, ' :', result[prefix]);
             }
           }
         } catch (_error) {
@@ -53,7 +53,7 @@ componentStatic = function(callback) {
     if (files.length === 0) {
       return callback(null, {});
     }
-    debug('files', files, err);
+    debug('found component.json', files.length, 'files', err);
     return mergeJsons(files, function(staticMapping) {
       return callback(null, staticMapping);
     });

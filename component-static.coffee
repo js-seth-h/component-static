@@ -17,7 +17,7 @@ mergeJsons = (files, callback)->
             for own prefix, staticDir of json.static
               dir = path.dirname(file)
               result[prefix] = path.normalize path.join dir, staticDir  
-              debug 'prefix', prefix, ' path', result[prefix]
+              debug 'prefix : path = ', prefix, ' :', result[prefix]
         catch 
       cnt--
       if cnt is 0
@@ -29,7 +29,7 @@ componentStatic = (callback)->
   glob '**/component.json',(err, files)->  
     return callback err if err
     return callback null, {} if files.length is 0
-    debug 'files', files, err
+    debug 'found component.json', files.length, 'files', err
     mergeJsons files, (staticMapping)->
       callback null, staticMapping
 
